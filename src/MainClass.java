@@ -13,20 +13,21 @@ public class MainClass {
 		}
 
 		char start = vars.get(0);
-		input = "ab";
+		input = "abc";
 
 		List<Character> terms = new ArrayList<>();
 		for (char c : input.toCharArray()) {
 			terms.add(c);
 		}
-		ContextFree g1 = new ContextFree(vars, terms, start);
-		input = "S->aSa";
+		SimpleGrammar g1 = new SimpleGrammar(vars, terms, start);
+		input = "S->aS";
 		g1.addProductions(input);
-		input = "S->bSb";
+		input = "S->bSaS";
 		g1.addProductions(input);
-		input = "S->$";
+		input = "S->c";
 		g1.addProductions(input);
-		System.out.println(g1.Is_CFG());
+
+		System.out.println(g1.Is_Simple());
 	}
 
 }

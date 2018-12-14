@@ -6,7 +6,7 @@ public class ContextFree extends Grammar {
 		super(variables, terminals, startVar);
 	}
 
-	public boolean Is_CFG() {
+	public boolean IS_CFG() {
 		for (Production p : this.productions) {
 			if (p.leftWing.getVarsNum() != 1 || p.leftWing.getTermsNum() != 0) {
 				p.print();
