@@ -8,23 +8,26 @@ import java.util.Scanner;
 public class MainClass {
 
 	public static void main(String[] args) {
-
+		
+		// define Variables
 		String input = "SABCD";
 
 		List<Character> vars = new ArrayList<>();
 		for (char c : input.toCharArray()) {
 			vars.add(c);
 		}
-
 		char start = vars.get(0);
+		
+		// define Terminals
 		input = "abcd";
 
 		List<Character> terms = new ArrayList<>();
 		for (char c : input.toCharArray()) {
 			terms.add(c);
 		}
-		ContextFree g1 = new ContextFree(vars, terms, start);
 		
+		// load grammar
+		ContextFree g1 = new ContextFree(vars, terms, start);
 		String fileName = "loader.txt";
 		try {
 			Scanner loaderScanner = new Scanner(new File(fileName));
@@ -37,7 +40,7 @@ public class MainClass {
 			e.printStackTrace();
 		}
 		
-
+		
 		g1.removeLanda();
 		Iterator<Production> iter = g1.productions.iterator();
 		while (iter.hasNext()) {

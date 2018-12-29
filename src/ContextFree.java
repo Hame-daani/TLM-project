@@ -32,7 +32,7 @@ public class ContextFree extends Grammar {
 		}
 		// if b->a add b to nulls
 		for (Production p : this.productions) {
-			if (checkRightForNull(p, nullables)) {
+			if (p.checkForNull(nullables)) {
 				nullables.add(p.leftWing.variables.get(0));
 			}
 		}
@@ -41,7 +41,7 @@ public class ContextFree extends Grammar {
 		for (Production p : this.productions) {
 			if (!p.rightWing.terminals.contains('$')) {
 				newProducts.add(p);
-				List<Character> nulls = getNulls(p, nullables);
+				List<Character> nulls = p.getNulls(nullables);
 				if (nulls.size() > 0) {
 					Iterator<Character> iter = nulls.iterator();
 					while (iter.hasNext()) {
@@ -62,29 +62,6 @@ public class ContextFree extends Grammar {
 		}
 		// all done
 		this.productions = newProducts;
-	}
-
-	public boolean checkRightForNull(Production p, List<Character> nulls) {
-		if (p.rightWing.terminals.size() == 0) {
-			Iterator<Character> iter = p.rightWing.variables.iterator();
-			while (iter.hasNext()) {
-				if (!nulls.contains(iter.next()))
-					return false;
-			}
-			return true;
-		}
-		return false;
-	}
-
-	public List<Character> getNulls(Production p, List<Character> nullables) {
-		List<Character> nulls = new ArrayList<>();
-		Iterator<Character> iter = p.rightWing.variables.iterator();
-		while (iter.hasNext()) {
-			char c = iter.next();
-			if (nullables.contains(c))
-				nulls.add(c);
-		}
-		return nulls;
 	}
 
 }

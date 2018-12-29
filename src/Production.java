@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class Production {
 
@@ -27,4 +30,30 @@ public class Production {
 		temp.rightWing.form = temp.rightWing.form.replace(Character.toString(a), "");
 		return temp;
 	}
+
+	// get a list of nullables and check if their exist in right wing
+	public boolean checkForNull(List<Character> nulls) {
+		if (this.rightWing.terminals.size() == 0) {
+			Iterator<Character> iter = this.rightWing.variables.iterator();
+			while (iter.hasNext()) {
+				if (!nulls.contains(iter.next()))
+					return false;
+			}
+			return true;
+		}
+		return false;
+	}
+
+	// get a list of nullables and return their that exist in right wing
+	public List<Character> getNulls(List<Character> nullables) {
+		List<Character> nulls = new ArrayList<>();
+		Iterator<Character> iter = this.rightWing.variables.iterator();
+		while (iter.hasNext()) {
+			char c = iter.next();
+			if (nullables.contains(c))
+				nulls.add(c);
+		}
+		return nulls;
+	}
+	
 }
