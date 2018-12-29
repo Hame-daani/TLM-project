@@ -46,11 +46,15 @@ public class ContextFree extends Grammar {
 					Iterator<Character> iter = nulls.iterator();
 					while (iter.hasNext()) {
 						char a = iter.next();
-						newProducts.add(p.remove(a));
+						Production temp = p.remove(a);
+						if(temp.rightWing.getTermsNum() != 0 || temp.rightWing.getVarsNum() != 0)
+							newProducts.add(temp);
 						Iterator<Character> iter2 = nulls.listIterator(nulls.indexOf(a) + 1);
 						while (iter2.hasNext()) {
 							char b = iter2.next();
-							newProducts.add(p.remove(a).remove(b));
+							temp = p.remove(a).remove(b);
+							if(temp.rightWing.getTermsNum() != 0 || temp.rightWing.getVarsNum() != 0)
+								newProducts.add(temp);
 						}
 					}
 				}
