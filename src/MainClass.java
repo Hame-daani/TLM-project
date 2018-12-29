@@ -1,6 +1,9 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Scanner;
 
 public class MainClass {
 
@@ -21,20 +24,19 @@ public class MainClass {
 			terms.add(c);
 		}
 		ContextFree g1 = new ContextFree(vars, terms, start);
-		input = "S->ABaC";
-		g1.addProductions(input);
-		input = "A->BC";
-		g1.addProductions(input);
-		input = "B->b";
-		g1.addProductions(input);
-		input = "B->$";
-		g1.addProductions(input);
-		input = "C->D";
-		g1.addProductions(input);
-		input = "C->$";
-		g1.addProductions(input);
-		input = "D->d";
-		g1.addProductions(input);
+		
+		String fileName = "loader.txt";
+		try {
+			Scanner loaderScanner = new Scanner(new File(fileName));
+			while(loaderScanner.hasNextLine()) {
+				input = loaderScanner.nextLine();
+				g1.addProductions(input);
+			}
+			loaderScanner.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		
 
 		g1.removeLanda();
 		Iterator<Production> iter = g1.productions.iterator();
