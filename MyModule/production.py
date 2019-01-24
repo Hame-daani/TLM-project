@@ -2,6 +2,14 @@ from MyModule.wing import Wing
 from numpy.lib.arraysetops import unique
 
 
+def getProducts(var, products):
+    vProducts = []
+    for p in products:
+        if p.left_wing.form == var:
+            vProducts.append(p.right_wing.form)
+    return vProducts
+
+
 class Production():
 
     def __init__(self, string):

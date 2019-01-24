@@ -20,6 +20,9 @@ def loadGrammar(address):
         print(error)
 
 
-# TODO: add '__len__' to classes
+def its_terminal(c):
+    return c.islower()
 
-# TODO: add 'its_terminal' and 'its_variable' funcs.
+
+def its_variable(c):
+    return c.isupper()

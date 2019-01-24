@@ -1,6 +1,8 @@
+
 class Wing():
 
     def __init__(self, string):
+        from MyModule.funcs import its_terminal, its_variable
         # all lower letters are terminal
         self.terminals = [c for c in string if c.islower()]
         # all upper letters are variable
