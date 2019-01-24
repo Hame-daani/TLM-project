@@ -14,3 +14,6 @@ class Grammar():
 
     def __str__(self):
         return f"Variables: {self.variables}\nTerminals: {self.terminals}\nStart: {self.start_var}\nProducts: {self.products}"
+
+    def __len__(self):
+        return len(self.products)

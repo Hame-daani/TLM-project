@@ -12,3 +12,6 @@ class Wing():
 
     def __repr__(self):
         return self.form
+
+    def __len__(self):
+        return len(self.form)

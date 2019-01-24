@@ -39,3 +39,6 @@ class Production():
                 if t not in variables:
                     variables.append(t)
         return variables
+
+    def __len__(self):
+        return (len(self.left_wing) + len(self.right_wing))
