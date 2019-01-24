@@ -1,5 +1,6 @@
 from MyModule.production import Production
 from MyModule.parser import DepthParser
+from numpy.lib.arraysetops import unique
 
 
 class Grammar():
@@ -20,3 +21,37 @@ class Grammar():
 
     def __len__(self):
         return len(self.products)
+
+    def detect_problem(self):
+        landa = self.detect_landa()
+        unit = self.detect_unit()
+        useless = self.detect_useless()
+        return (landa, unit, useless)
+
+    def detect_landa(self):
+        landas = []
+        for p in self.products:
+            if '$' in p.right_wing.form:
+                landas.extend(p.left_wing.variables)
+        return None if len(landas) == 0 else landas
+
+    def detect_unit(self):
+        units = []
+        for p in self.products:
+            if len(p.right_wing.form) == 1 and len(p.right_wing.variables) == 1:
+                units.extend(p.right_wing.variables)
+        return None if len(units) == 0 else units
+
+    def detect_useless(self):
+        useless = []
+        usefulls = [self.start_var]
+        for u in usefulls:
+            for p in self.products:
+                if p.left_wing.variables[0] == u:
+                    for v in p.right_wing.variables:
+                        if v not in usefulls:
+                            usefulls.append(v)
+        for v in self.variables:
+            if v not in usefulls:
+                useless.extend(v)
+        return None if len(useless) == 0 else useless
