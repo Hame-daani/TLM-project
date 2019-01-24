@@ -1,4 +1,7 @@
 *.patch
-*.txt
+notes.txt
+grammar.txt
 __pycache__/
 .vscode/
+Project.py
+.venv/
