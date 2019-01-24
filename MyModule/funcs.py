@@ -10,11 +10,15 @@ def loadGrammar(address):
     Returns:
             Grammar -- grammar created by data
     """
-    with open(address, 'r') as file:
-        data = file.readlines()
-        # clear each line from '\n'
-        data = [d.replace("\n", "") for d in data]
-        return Grammar(data)
+    try:
+        with open(address, 'r') as file:
+            data = file.readlines()
+            # clear each line from '\n'
+            data = [d.replace("\n", "") for d in data]
+            return Grammar(data)
+    except FileNotFoundError as error:
+        print(error)
+
 
 # TODO: add '__len__' to classes
 
