@@ -1,5 +1,5 @@
 from MyModule.production import Production
-from MyModule.parser import DepthParser
+from MyModule.parser import DepthParser, BreadthParser
 from numpy.lib.arraysetops import unique
 
 
@@ -14,6 +14,8 @@ class Grammar():
         # first variable is our start variable
         self.start_var = self.variables[0]
         self.depth_parser = DepthParser(
+            self.start_var, self.products, self.variables)
+        self.breadth_parser = BreadthParser(
             self.start_var, self.products, self.variables)
 
     def __str__(self):
@@ -39,7 +41,8 @@ class Grammar():
         units = []
         for p in self.products:
             if len(p.right_wing.form) == 1 and len(p.right_wing.variables) == 1:
-                units.extend(p.right_wing.variables)
+                units.append(
+                    (p.left_wing.variables[0], p.right_wing.variables[0]))
         return None if len(units) == 0 else units
 
     def detect_useless(self):

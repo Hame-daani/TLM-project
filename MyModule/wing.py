@@ -2,6 +2,7 @@
 class Wing():
 
     def __init__(self, string):
+        #TODO: its_terminal
         from MyModule.funcs import its_terminal, its_variable
         # all lower letters are terminal
         self.terminals = [c for c in string if c.islower()]
