@@ -13,16 +13,22 @@ class Grammar():
         self.variables = Production.getVariables(self.products)
         # first variable is our start variable
         self.start_var = self.variables[0]
-        self.depth_parser = DepthParser(
-            self.start_var, self.products, self.variables)
-        self.breadth_parser = BreadthParser(
-            self.start_var, self.products, self.variables)
+        self.depth_parser = None
+        self.breadth_parser = None
 
     def __str__(self):
         return f"Variables: {self.variables}\nTerminals: {self.terminals}\nStart: {self.start_var}\nProducts: {self.products}"
 
     def __len__(self):
         return len(self.products)
+
+    def depth_parse(self, target):
+        dp = DepthParser(self.start_var, self.products, self.variables)
+        return dp.parse(target)
+
+    def breadth_parse(self, target):
+        bp = BreadthParser(self.start_var, self.products, self.variables)
+        return bp.parse(target)
 
     def detect_problem(self):
         landa = self.detect_landa()
@@ -58,3 +64,74 @@ class Grammar():
             if v not in usefulls:
                 useless.extend(v)
         return None if len(useless) == 0 else useless
+
+    def normalize(self):
+        pass
+
+    def to_chomskey(self):
+        self.remove_s_rhs()
+        self.normalize()
+        self.var_for_ter()
+        self.split_two_more()
+
+    def remove_s_rhs(self):
+        for p in self.products:
+            if self.start_var in p.right_wing.variables:
+                self.products.insert(0, Production(f"T->{self.start_var}"))
+                self.variables.append("T")
+                self.start_var = "T"
+                break
+
+    def var_for_ter(self):
+        from MyModule.funcs import its_terminal, its_variable
+        letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        table = {}
+        for t in self.terminals:
+            table[t] = None
+        for p in self.products:
+            if len(p.right_wing.form) > 1 and len(p.right_wing.terminals) >= 1:
+                for c in p.right_wing.form:
+                    if its_terminal(c):
+                        if table[c] == None:
+                            for l in letters:
+                                if l not in self.variables:
+                                    table[c] = l
+                                    self.products.append(
+                                        Production(f"{l}->{c}"))
+                                    if l not in self.variables:
+                                        self.variables.append(l)
+                                    break
+                        p.right_wing.form = p.right_wing.form.replace(
+                            c, table[c])
+                        p.form = p.form.replace(c, table[c])
+                        if table[c] not in p.right_wing.variables:
+                            p.right_wing.variables.append(table[c])
+                        if table[c] not in p.variables:
+                            p.variables.append(table[c])
+                        try:
+                            p.right_wing.terminals.remove(c)
+                        except ValueError:
+                            pass
+                        try:
+                            p.terminals.remove(c)
+                        except ValueError:
+                            pass
+
+    def split_two_more(self):
+        letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        for p in self.products:
+            if len(p.right_wing.variables) > 2:
+                for l in letters:
+                    if l not in self.variables:
+                        new_p_value = p.right_wing.form[1:]
+                        self.variables.append(l)
+                        self.products.append(Production(f"{l}->{new_p_value}"))
+                        p.right_wing.form = p.right_wing.form.replace(
+                            new_p_value, l)
+                        p.form = p.form.replace(new_p_value, l)
+                        p.variables.append(l)
+                        p.right_wing.variables.append(l)
+                        for c in new_p_value:
+                            p.variables.remove(c)
+                            p.right_wing.variables.remove(c)
+                        break
