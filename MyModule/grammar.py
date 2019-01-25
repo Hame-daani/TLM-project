@@ -22,6 +22,21 @@ class Grammar():
     def __len__(self):
         return len(self.products)
 
+    def its_simple(self):
+        from MyModule.funcs import its_terminal, its_variable
+        occurens = []
+        for p in self.products:
+            if len(p.right_wing.terminals) > 1:
+                return False
+            if len(p.right_wing.terminals) == 1 and not its_terminal(p.right_wing.form[0]):
+                return False
+            o = (p.left_wing.variables[0], p.right_wing.terminals[0])
+            if o in occurens:
+                return False
+            else:
+                occurens.append(o)
+        return True
+
     def depth_parse(self, target):
         dp = DepthParser(self.start_var, self.products, self.variables)
         return dp.parse(target)
@@ -104,7 +119,7 @@ class Grammar():
                 self.products.append(Production(
                     f"{left}->{p.right_wing.form}"))
 
-    def remove_useless(self,useless):
+    def remove_useless(self, useless):
         pass
 
     def to_chomskey(self):
