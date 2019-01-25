@@ -12,7 +12,7 @@ class Grammar():
         self.terminals = Production.getTerminals(self.products)
         self.variables = Production.getVariables(self.products)
         # first variable is our start variable
-        self.start_var = self.variables[0]
+        self.start_var = 'S'
         self.depth_parser = None
         self.breadth_parser = None
 
@@ -66,6 +66,45 @@ class Grammar():
         return None if len(useless) == 0 else useless
 
     def normalize(self):
+        landas = self.detect_landa()
+        while landas:
+            self.remove_landa(landas)
+            landas = self.detect_landa()
+        units = self.detect_unit()
+        while units:
+            self.remove_units(units)
+            units = self.detect_unit()
+        useless = self.detect_useless()
+        while useless:
+            self.remove_useless(useless)
+            useless = self.detect_useless()
+
+    def remove_landa(self, landas):
+        for l in landas:
+            for p in self.products:
+                if p.left_wing.variables[0] == l and p.right_wing.form == "$":
+                    self.products.remove(p)
+                if l in p.right_wing.variables:
+                    new_p = p.right_wing.form.replace(l, "")
+                    if new_p:
+                        self.products.append(Production(
+                            f"{p.left_wing.form}->{new_p}"))
+
+    def remove_units(self, units):
+        for left, right in units:
+            products = []
+            for p in self.products:
+                if len(p.right_wing.form) == 1 and p.left_wing.variables[0] == left and p.right_wing.variables[0] == right:
+                    self.products.remove(p)
+            for p in self.products:
+                if p.left_wing.variables[0] == right:
+                    products.append(p)
+
+            for p in products:
+                self.products.append(Production(
+                    f"{left}->{p.right_wing.form}"))
+
+    def remove_useless(self,useless):
         pass
 
     def to_chomskey(self):
@@ -120,7 +159,7 @@ class Grammar():
     def split_two_more(self):
         letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         for p in self.products:
-            if len(p.right_wing.variables) > 2:
+            if len(p.right_wing.form) > 2:
                 for l in letters:
                     if l not in self.variables:
                         new_p_value = p.right_wing.form[1:]
