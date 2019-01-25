@@ -1,5 +1,5 @@
 from MyModule.production import Production
-from MyModule.parser import DepthParser, BreadthParser
+from MyModule.parser import DepthParser, BreadthParser, S_Parser
 from numpy.lib.arraysetops import unique
 
 
@@ -15,6 +15,7 @@ class Grammar():
         self.start_var = 'S'
         self.depth_parser = None
         self.breadth_parser = None
+        self.s_parser = None
 
     def __str__(self):
         return f"Variables: {self.variables}\nTerminals: {self.terminals}\nStart: {self.start_var}\nProducts: {self.products}"
@@ -44,6 +45,10 @@ class Grammar():
     def breadth_parse(self, target):
         bp = BreadthParser(self.start_var, self.products, self.variables)
         return bp.parse(target)
+
+    def s_parse(self, target):
+        sp = S_Parser(self.start_var, self.products, self.variables)
+        return sp.parse(target)
 
     def detect_problem(self):
         landa = self.detect_landa()
