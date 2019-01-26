@@ -125,7 +125,11 @@ class Grammar():
                     f"{left}->{p.right_wing.form}"))
 
     def remove_useless(self, useless):
-        pass
+        for p in self.products:
+            if p.left_wing.variables[0] in useless:
+                self.products.remove(p)
+                if p.left_wing.variables[0] in self.variables:
+                    self.variables.remove(p.left_wing.variables[0])
 
     def to_chomskey(self):
         self.remove_s_rhs()
