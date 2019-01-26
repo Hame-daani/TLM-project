@@ -1,7 +1,6 @@
 *.patch
 notes.txt
-grammar.txt
+grammar_*.txt
 __pycache__/
 .vscode/
-Project.py
 .venv/
